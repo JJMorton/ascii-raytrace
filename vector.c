@@ -2,45 +2,6 @@
 
 #include "vector.h"
 
-Vec3 vec3_rotateX(Vec3 v, double theta)
-{
-	double c = cos(theta);
-	double s = sin(theta);
-	Vec3 out =
-	{
-		v.x,
-		(c + s) * v.y,
-		(c - s) * v.z
-	};
-	return out;
-}
-
-Vec3 vec3_rotateY(Vec3 v, double theta)
-{
-	double c = cos(theta);
-	double s = sin(theta);
-	Vec3 out =
-	{
-		(c - s) * v.x,
-		v.y,
-		(s + c) * v.z
-	};
-	return out;
-}
-
-Vec3 vec3_rotateZ(Vec3 v, double theta)
-{
-	double c = cos(theta);
-	double s = sin(theta);
-	Vec3 out =
-	{
-		(c + s) * v.x,
-		(c - s) * v.y,
-		v.z
-	};
-	return out;
-}
-
 Vec3 vec3_rotate(Vec3 v, double thetax, double thetay, double thetaz)
 {
 
