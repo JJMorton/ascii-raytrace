@@ -104,18 +104,19 @@ int main(void)
 		RESETCURSOR();
 		triangle_renderAll(numtriangles, triangles, SCREENSIZE, FOV);
 		INVERSECOLORS();
-		printf(" Press 'q' or 'Esc' to exit | t=%.2fs", t);
+		printf(" t=%.2fs ", t);
 
 		if (angles.x < 0)
-			printf(" | ROTATING UP");
+			printf("| ROTATING UP ");
 		else if (angles.x > 0)
-			printf(" | ROTATING DOWN");
+			printf("| ROTATING DOWN ");
 
 		if (angles.z < 0)
-			printf(" | ROTATING LEFT");
+			printf("| ROTATING LEFT ");
 		else if (angles.z > 0)
-			printf(" | ROTATING RIGHT");
+			printf("| ROTATING RIGHT ");
 
+		printf("\n Press 'q' or 'Esc' to exit, arrow keys to rotate ");
 		NORMALCOLORS();
 		fflush(stdout);
 
