@@ -16,7 +16,7 @@ Key input_keybuffer[MAX_KEYS_AT_ONCE] = { KEY_NONE };
 // Needs the zero at the end corresponding to KEY_NONE to mark the end of the array
 const int XKeyCodes[] =
 {
-	111, 116, 113, 114, 24, 9, 0
+	111, 116, 113, 114, 20, 21, 59, 60, 22, 24, 9, 0
 };
 
 struct termios orig_termios;

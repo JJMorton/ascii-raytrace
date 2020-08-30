@@ -9,24 +9,21 @@
 #include "input.h"
 
 #define SCREENSIZE 40
-#define WORLDSIZE 1
-#define NUMSHADES 10
 #define FACESIZE 0.5
-#define FOV (M_PI/2.0)
 #define DISTANCE 1.5
 
-#define CLEARTERM() printf("\x1b[2J")
-#define RESETCURSOR() printf("\x1b[H")
+#define CLEARTERM() printf("\033[2J")
+#define RESETCURSOR() printf("\033[H")
 #define INVERSECOLORS() printf("\033[7m")
 #define NORMALCOLORS() printf("\033[m")
+
+void fillEndWithChar(size_t strlen, char str[strlen], char c);
 
 int main(void)
 {
 
 	logger_setOutput("run.log");
 	logger_setLevel(LOGTYPE_INFO);
-
-	input_init();
 
 	size_t numtriangles = 6;
 	Vec3 vertices[] =
@@ -68,11 +65,14 @@ int main(void)
 	}
 	logger_log(LOGTYPE_INFO, "Created triangles");
 
-	Vec3 pivot = { 0, DISTANCE, 0 };
+	input_init();
 
-	CLEARTERM();
+	Vec3 pivot = { 0, DISTANCE, 0 };
+	double fov = M_PI / 2.0;
+	double cameradistance = 0.0;
 	double period = 0.05;
 	bool run = true;
+	CLEARTERM();
 	for (double t = 0; run; t += period)
 	{
 		input_poll();
@@ -90,6 +90,16 @@ int main(void)
 					angles.z -= period; break;
 				case KEY_RIGHT:
 					angles.z += period; break;
+				case KEY_MINUS:
+					cameradistance += period; break;
+				case KEY_PLUS:
+					cameradistance -= period; break;
+				case KEY_COMMA:
+					fov = fmax(M_PI / 12.0, fov - period * M_PI / 2.0); break;
+				case KEY_FULLSTOP:
+					fov = fmin(M_PI, fov + period * M_PI / 2.0); break;
+				case KEY_BACKSPACE:
+					CLEARTERM(); break;
 				case KEY_Q:
 				case KEY_ESC:
 					run = false; break;
@@ -102,21 +112,18 @@ int main(void)
 		}
 
 		RESETCURSOR();
-		triangle_renderAll(numtriangles, triangles, SCREENSIZE, FOV);
+		triangle_renderAll(numtriangles, triangles, SCREENSIZE, fov, cameradistance);
 		INVERSECOLORS();
-		printf(" t=%.2fs ", t);
 
-		if (angles.x < 0)
-			printf("| ROTATING UP ");
-		else if (angles.x > 0)
-			printf("| ROTATING DOWN ");
-
-		if (angles.z < 0)
-			printf("| ROTATING LEFT ");
-		else if (angles.z > 0)
-			printf("| ROTATING RIGHT ");
-
-		printf("\n Press 'q' or 'Esc' to exit, arrow keys to rotate ");
+		char statustext[SCREENSIZE * 2] = { 0 };
+		snprintf(statustext, SCREENSIZE * 2, " FOV=%.1f | DISTANCE=%.1f%s%s ",
+				fov * 180 / M_PI,
+				cameradistance + DISTANCE,
+				angles.x < 0 ? " | ROTATING UP" : (angles.x > 0 ? " | ROTATING DOWN" : ""),
+				angles.z < 0 ? " | ROTATING LEFT" : (angles.z > 0 ? " | ROTATING RIGHT" : "")
+			);
+		fillEndWithChar(SCREENSIZE * 2, statustext, ' ');
+		printf("%s", statustext);
 		NORMALCOLORS();
 		fflush(stdout);
 
@@ -127,5 +134,13 @@ int main(void)
 	RESETCURSOR();
 
 	return 0;
+}
+
+void fillEndWithChar(size_t strlen, char str[strlen], char c)
+{
+	for (char *end = str + strlen; str < end - 1; str++)
+	{
+		if (*str == '\0') *str = c;
+	}
 }
 

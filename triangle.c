@@ -73,11 +73,11 @@ double triangle_intersectionWithRay(Triangle t, Vec3 origin, Vec3 direction, Vec
 	}
 }
 
-void triangle_renderAll(size_t trianglesc, Triangle triangles[], int screensize, double fov)
+void triangle_renderAll(size_t trianglesc, Triangle triangles[], int screensize, double fov, double cameradistance)
 {
 	double scale = tan(fov * 0.5);
 	Vec3 light = { 1, 0, 0 };
-	Vec3 ray_origin = { 0, 0, 0 };
+	Vec3 ray_origin = { 0, -cameradistance, 0 };
 	for (int z = 0; z < screensize; z++)
 	{
 		for (int x = 0; x < screensize; x++)

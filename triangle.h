@@ -11,7 +11,7 @@ typedef struct
 Triangle triangle_create(Vec3 p1, Vec3 p2, Vec3 p3);
 Triangle triangle_rotate(Triangle t, Vec3 pivot, double thetax, double thetay, double thetaz);
 double   triangle_intersectionWithRay(Triangle t, Vec3 origin, Vec3 direction, Vec3 *intersection);
-void     triangle_renderAll(size_t trianglesc, Triangle triangles[], int screensize, double cameradistance);
+void     triangle_renderAll(size_t trianglesc, Triangle triangles[], int screensize, double fov, double cameradisstance);
 
 #endif // RENDERER_H
 
